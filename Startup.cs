@@ -47,7 +47,7 @@ namespace ProductCatalog
             app.UseMvc();
 
             app.UseResponseCompression();
-            // app.UseSwagger();
+            app.UseSwagger();
             app.UseSwaggerUI(c => 
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Products Catalogs - V1");
