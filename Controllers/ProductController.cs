@@ -16,7 +16,7 @@ namespace ProductCatalog.Controllers
             _repository = repository;
         }
 
-        [Route("v1/products"), HttpGet, ResponseCache(Location = ResponseCacheLocation.Any, Duration = 3600)] //Cache 1hour
+        [Route("v1/products"), HttpGet] //Cache 1hour
         public IEnumerable<ListProductViewModel> Get()
         {
             return _repository.Get().Select(x => new ListProductViewModel(x)).ToList();
