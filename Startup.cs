@@ -16,8 +16,11 @@ namespace ProductCatalog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddJsonOptions(
-            options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-        );
+                options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
+            services.AddResponseCompression();
+
             //Context
             services.AddScoped<StoreDataContext, StoreDataContext>();
             //Repository
@@ -31,6 +34,7 @@ namespace ProductCatalog
 
             app.UseMvc();
 
+            app.UseResponseCompression();
         }
     }
 }
