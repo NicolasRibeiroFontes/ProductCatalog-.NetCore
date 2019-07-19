@@ -1,43 +1,48 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ProductCatalog.Data;
 using ProductCatalog.Models;
+using ProductCatalog.Repositories;
 using ProductCatalog.ViewModels.ProductViewModels;
 
 namespace ProductCatalog.Controllers
 {
     public class ProductController : Controller
     {
-        private readonly StoreDataContext _context;
+        private readonly ProductRepository _repository;
 
-        public ProductController(StoreDataContext context)
+        public ProductController(ProductRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [Route("v1/products"), HttpGet]
         public IEnumerable<ListProductViewModel> Get()
         {
-            return _context.Products.Include(x => x.Category).Select(x => new ListProductViewModel
-            {
-                Id = x.Id,
-                Category = x.Category.Title,
-                CategoryId = x.CategoryId,
-                Price = x.Price,
-                Title = x.Title
-            }).AsNoTracking().ToList();
+            return _repository.Get().Select(x => new ListProductViewModel(x)).ToList();
+        }
+
+         [Route("v1/products/{id}"), HttpGet]
+        public ListProductViewModel Get(int id)
+        {
+            return new ListProductViewModel(_repository.Get(id));
         }
 
         [Route("v1/products"), HttpPost]
         public ResultViewModel Post([FromBody]EditorProductViewModel model)
         {
-            Product product = model.ConvertNewViewModelToModel();
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            model.Validate();
+            if (model.Invalid)
+                return new ResultViewModel
+                {
+                    Data = model.Notifications,
+                    Message = "Wasn't possible save product!",
+                    Success = false
+                };
             
+            Product product = model.ConvertNewViewModelToModel();
+            _repository.Save(product);
+
             return new ResultViewModel
             {
                 Data = product,
@@ -49,10 +54,17 @@ namespace ProductCatalog.Controllers
         [Route("v1/products"), HttpPut]
         public ResultViewModel Put([FromBody]EditorProductViewModel model)
         {
-            Product product = _context.Products.Find(model.Id);
+            model.Validate();
+            if (model.Invalid)
+                return new ResultViewModel
+                {
+                    Data = model.Notifications,
+                    Message = "Wasn't possible update product!",
+                    Success = false
+                };
+            Product product = _repository.Get(model.Id);
             product = model.ConvertUsedViewModelToModel(product);
-            _context.Entry<Product>(product).State = EntityState.Modified;
-            _context.SaveChanges();
+            _repository.Update(product);
 
             return new ResultViewModel
             {

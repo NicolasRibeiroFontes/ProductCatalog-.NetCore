@@ -1,9 +1,11 @@
 using System;
+using Flunt.Notifications;
+using Flunt.Validations;
 using ProductCatalog.Models;
 
 namespace ProductCatalog.ViewModels.ProductViewModels
 {
-    public class EditorProductViewModel
+    public class EditorProductViewModel : Notifiable, IValidatable
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -12,6 +14,16 @@ namespace ProductCatalog.ViewModels.ProductViewModels
         public int Quantity { get; set; }
         public string Image { get; set; }
         public int CategoryId { get; set; }
+
+        public void Validate()
+        {
+            AddNotifications(
+                new Contract()
+                .HasMaxLen(Title, 120, "Title", "The title is bigger that is possible!")
+                .HasMinLen(Title, 3, "Title", "The title is smaller that is possible!")
+                .IsGreaterThan(Price, 0, "Price", "The price need to be greater than 0")
+            );
+        }
 
         public Product ConvertNewViewModelToModel()
         {
