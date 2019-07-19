@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using ProductCatalog.Data;
 using ProductCatalog.Repositories;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProductCatalog
 {
@@ -25,6 +26,17 @@ namespace ProductCatalog
             services.AddScoped<StoreDataContext, StoreDataContext>();
             //Repository
             services.AddTransient<ProductRepository, ProductRepository>();
+
+            //Swagger Documentation
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new Info
+                {
+                    Title = "Products Catalog",
+                    Version = "v1",
+                    Description = "Test Software with .Net Core | Nicolas Fontes <wwww.nicolasfontes.com.br>"
+                });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -35,6 +47,12 @@ namespace ProductCatalog
             app.UseMvc();
 
             app.UseResponseCompression();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => 
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Products Catalogs - V1");
+            });
+
         }
     }
 }
