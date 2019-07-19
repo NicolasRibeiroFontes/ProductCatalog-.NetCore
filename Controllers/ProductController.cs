@@ -16,13 +16,13 @@ namespace ProductCatalog.Controllers
             _repository = repository;
         }
 
-        [Route("v1/products"), HttpGet]
+        [Route("v1/products"), HttpGet, ResponseCache(Location = ResponseCacheLocation.Any, Duration = 3600)] //Cache 1hour
         public IEnumerable<ListProductViewModel> Get()
         {
             return _repository.Get().Select(x => new ListProductViewModel(x)).ToList();
         }
 
-         [Route("v1/products/{id}"), HttpGet]
+        [Route("v1/products/{id}"), HttpGet, ResponseCache(Duration = 3600)]
         public ListProductViewModel Get(int id)
         {
             return new ListProductViewModel(_repository.Get(id));
@@ -39,7 +39,7 @@ namespace ProductCatalog.Controllers
                     Message = "Wasn't possible save product!",
                     Success = false
                 };
-            
+
             Product product = model.ConvertNewViewModelToModel();
             _repository.Save(product);
 
@@ -62,6 +62,7 @@ namespace ProductCatalog.Controllers
                     Message = "Wasn't possible update product!",
                     Success = false
                 };
+
             Product product = _repository.Get(model.Id);
             product = model.ConvertUsedViewModelToModel(product);
             _repository.Update(product);
