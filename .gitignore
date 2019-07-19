@@ -80,6 +80,7 @@ StyleCopReport.xml
 *.log
 *.vspscc
 *.vssscc
+*.txt
 .builds
 *.pidb
 *.svclog

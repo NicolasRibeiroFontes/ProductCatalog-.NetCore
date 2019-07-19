@@ -12,9 +12,7 @@ namespace ProductCatalog.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
         {
-            // optionBuilder.UseSqlServer(@"Server= DESKTOP-H6UQ71S\SQLEXPRESS; Database= ProductCatalog; Integrated Security=True; User ID=sa; Password=165044");
-
-            optionBuilder.UseSqlServer(@"Server=test-nicolas.database.windows.net,1433;Initial Catalog=ProductsCatalog;Persist Security Info=False;User ID=nicolas;Password=Wanderlust1702!;");
+            optionBuilder.UseSqlServer(@"Server= DESKTOP-H6UQ71S\SQLEXPRESS; Database= ProductCatalog; Integrated Security=True; User ID=sa; Password=165044");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
