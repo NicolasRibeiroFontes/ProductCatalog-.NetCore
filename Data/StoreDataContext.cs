@@ -14,7 +14,9 @@ namespace ProductCatalog.Data
         {
             // optionBuilder.UseSqlServer(@"Server= DESKTOP-H6UQ71S\SQLEXPRESS; Database= ProductCatalog; Integrated Security=True; User ID=sa; Password=165044");
 
-            optionBuilder.UseSqlServer(@"Server= DESKTOP-H6UQ71S\SQLEXPRESS; Database= ProductCatalog; Integrated Security=True; User ID=nicolas; Password=nicolas165044");
+            optionBuilder.UseSqlServer(@"Server=tcp:test-nicolas.database.windows.net,1433;
+            Initial Catalog=ProductsCatalog;Persist Security Info=False;User ID=nicolas;Password=nicolas165044;
+            MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
